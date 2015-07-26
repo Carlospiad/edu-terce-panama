@@ -59,3 +59,41 @@ ggplot(data.m, aes(reorder(country,puntaje_promedio),puntaje_promedio)) + geom_b
 ```
 
 ![plot of chunk grafica3er_asignatura](figure/grafica3er_asignatura-1.png) 
+
+## 6to Grado:
+
+
+```r
+# seleccionar la variable de pais y el puntaje del examen de matemáticas de 6to grado
+dat_math <- cbind(pm6['country'],pm6['puntaje_estandar'])
+# seleccionar la variable de pais y el puntaje del examen de literatura de 6to grado
+dat_lit <- cbind(pl6['country'],pl6['puntaje_estandar'])
+# Omit N/As
+newdat_math <- na.omit(dat_math)
+newdat_lit <- na.omit(dat_lit)
+# Puntaje promedio por país
+avg_per_country_math <- ddply(newdat_math,~country,summarise,puntaje_promedio=mean(puntaje_estandar))
+avg_per_country_lit <- ddply(newdat_lit,~country,summarise,puntaje_promedio=mean(puntaje_estandar))
+avg_per_country_math[3] <- "Mathematics"
+avg_per_country_lit[3] <- "Literature"
+# Sumar ambos resultados
+data <- rbind(avg_per_country_lit,avg_per_country_math)
+data.m <- ddply(data,~country,puntaje_promedio=mean(puntaje_promedio))
+```
+### Gráfica - Resultados promedio totales de 6to grado por país.
+
+```r
+# Crear bar chart
+ggplot(data.m, aes(reorder(country,puntaje_promedio),puntaje_promedio))+geom_bar(stat = "identity")
+```
+
+![plot of chunk grafica6to](figure/grafica6to-1.png) 
+
+### Gráfica - Resultados promedio de 6to grado por país por asignatura.
+
+```r
+# Crear bar chart
+ggplot(data.m, aes(reorder(country,puntaje_promedio),puntaje_promedio)) + geom_bar(stat = "identity") + facet_grid(. ~ V3)+theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+![plot of chunk grafica6to_asignatura](figure/grafica6to_asignatura-1.png) 
